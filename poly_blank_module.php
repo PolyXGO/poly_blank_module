@@ -57,51 +57,52 @@ class POLYBLANKMODULE
         hooks()->add_action('clients_login_form_end', [$this, 'clients_customers_login_form_footer']); // Clients & Customers login form footer
     }
     
-    public function show_block_area($content)
-    {
-        return '<div class="poly-hook-area" style="padding: 4px; color: yellow; display: flex; justify-content: center;"><div style="background:red; padding: 4px 8px">' . $content . ' by '.POLY_BLANK_MODULE.'</div></div>';
-    }
     public function admin_authentication_head()
     {
-        echo $this->show_block_area('Login_Admin_Staff_HEAD');
+        echo $this->show_block_area("Login_Admin_Staff_HEAD","hooks()->add_action('app_admin_authentication_head', [\$this, 'your_function_admin_authentication_head']);");
     }
 
     public function admin_login_form_head()
     {
-        echo $this->show_block_area('Login_Admin_Staff_Form_HEAD');
+        echo $this->show_block_area('Login_Admin_Staff_Form_HEAD',"hooks()->add_action('after_admin_login_form_start', [\$this, 'your_function_admin_login_form_head']);");
     }
     public function admin_login_form_footer()
     {
-        echo $this->show_block_area('Login_Admin_Staff_FOOTER');
+        echo $this->show_block_area('Login_Admin_Staff_FOOTER',"hooks()->add_action('before_admin_login_form_close', [\$this, 'your_function_admin_login_form_footer']);");
     }
 
-    public function clients_customers_login_form_header()
+    public function clients_customers_login_form_head()
     {
-        echo $this->show_block_area('Login_Clients_Form_HEAD');
+        echo $this->show_block_area('Login_Clients_Form_HEAD',"hooks()->add_action('clients_login_form_start', [\$this, 'your_function_clients_customers_login_form_head']);");
     }
     public function clients_customers_login_form_footer()
     {
-        echo $this->show_block_area('Login_Clients_Form_FOOTER');
+        echo $this->show_block_area('Login_Clients_Form_FOOTER',"hooks()->add_action('clients_login_form_end', [\$this, 'your_function_clients_customers_login_form_footer']);");
     }
 
     //Login admin & staff
     public function scripts_styles_admin_staff_head()
     {
-        echo $this->show_block_area('Logged_Amin_HEAD');
+        echo $this->show_block_area('Logged_Amin_HEAD',"hooks()->add_action('app_admin_head', [\$this, 'your_function_scripts_styles_admin_staff_head']);");
     }
     public function scripts_styles_admin_staff_footer()
     {
-        echo $this->show_block_area('Logged_Admin_FOOTER');
+        echo $this->show_block_area('Logged_Admin_FOOTER',"hooks()->add_action('app_admin_head', [\$this, 'your_function_scripts_styles_admin_staff_head']);");
     }
 
     //Login clients/ customers
     public function scripts_styles_clients_customers_head()
     {
-        echo $this->show_block_area('LoginLogged_Clients_Customer_HEAD');
+        echo $this->show_block_area('LoginLogged_Clients_Customer_HEAD',"hooks()->add_action('app_customers_head', [\$this, 'your_function_scripts_styles_clients_customers_head']);");
     }
     public function scripts_styles_clients_customers_footer()
     {
-        echo $this->show_block_area('LoginLogged_Clients_Customer_FOOTER');
+        echo $this->show_block_area('LoginLogged_Clients_Customer_FOOTER',"hooks()->add_action('app_customers_footer', [\$this, 'your_function_scripts_styles_clients_customers_footer']);");
+    }
+
+    public function show_block_area($content, $hook_function = '')
+    {
+        return '<div class="poly-hook-area" style="padding: 4px; color: yellow; display: none; justify-content: center;"><div style="background:red; padding: 4px 8px; text-align: center">' . $content . ' by '.POLY_BLANK_MODULE. ((!empty($hook_function) ? "<pre>{$hook_function}</pre>" :'')).'</div></div>';
     }
 
     public function register_activation_hook()
