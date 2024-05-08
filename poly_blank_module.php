@@ -102,7 +102,7 @@ class POLYBLANKMODULE
 
     public function show_block_area($content, $hook_function = '')
     {
-        return '<div class="poly-hook-area" style="padding: 4px; color: yellow; display: none; justify-content: center;"><div style="background:red; padding: 4px 8px; text-align: center">' . $content . ' by '.POLY_BLANK_MODULE. ((!empty($hook_function) ? "<pre>{$hook_function}</pre>" :'')).'</div></div>';
+        return '<div class="poly-hook-area" style="padding: 4px; color: yellow; display: flex; justify-content: center;"><div style="background:red; padding: 4px 8px; text-align: center">' . $content . ' by '.POLY_BLANK_MODULE. ((!empty($hook_function) ? "<pre>{$hook_function}</pre>" :'')).'</div></div>';
     }
 
     public function register_activation_hook()
