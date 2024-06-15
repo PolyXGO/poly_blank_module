@@ -10,6 +10,7 @@ Author URI: https://codecanyon.net/user/polyxgo
 */
 
 define('POLY_BLANK_MODULE', 'poly_blank_module');
+define('POLY_BLANK_MODULE_SETTINGS_TAB', 'settings_tab');
 define('POLY_BLANK_MODULE_VERSION', '1.0.0');
 define('POLY_BLANK_MODULE_NAME', 'Poly Blank Module');
 
@@ -56,63 +57,68 @@ class POLYBLANKMODULE
         hooks()->add_action('clients_login_form_start', [$this, 'clients_customers_login_form_header']); // Clients & Customers login form header
         hooks()->add_action('clients_login_form_end', [$this, 'clients_customers_login_form_footer']); // Clients & Customers login form footer
     }
-    
+
     public function admin_authentication_head()
     {
-        echo $this->show_block_area("Login_Admin_Staff_HEAD","hooks()->add_action('app_admin_authentication_head', [\$this, 'your_function_admin_authentication_head']);");
+        echo $this->show_block_area("Login_Admin_Staff_HEAD", "hooks()->add_action('app_admin_authentication_head', [\$this, 'your_function_admin_authentication_head']);");
     }
 
     public function admin_login_form_head()
     {
-        echo $this->show_block_area('Login_Admin_Staff_Form_HEAD',"hooks()->add_action('after_admin_login_form_start', [\$this, 'your_function_admin_login_form_head']);");
+        echo $this->show_block_area('Login_Admin_Staff_Form_HEAD', "hooks()->add_action('after_admin_login_form_start', [\$this, 'your_function_admin_login_form_head']);");
     }
     public function admin_login_form_footer()
     {
-        echo $this->show_block_area('Login_Admin_Staff_FOOTER',"hooks()->add_action('before_admin_login_form_close', [\$this, 'your_function_admin_login_form_footer']);");
+        echo $this->show_block_area('Login_Admin_Staff_FOOTER', "hooks()->add_action('before_admin_login_form_close', [\$this, 'your_function_admin_login_form_footer']);");
     }
 
     public function clients_customers_login_form_head()
     {
-        echo $this->show_block_area('Login_Clients_Form_HEAD',"hooks()->add_action('clients_login_form_start', [\$this, 'your_function_clients_customers_login_form_head']);");
+        echo $this->show_block_area('Login_Clients_Form_HEAD', "hooks()->add_action('clients_login_form_start', [\$this, 'your_function_clients_customers_login_form_head']);");
     }
     public function clients_customers_login_form_footer()
     {
-        echo $this->show_block_area('Login_Clients_Form_FOOTER',"hooks()->add_action('clients_login_form_end', [\$this, 'your_function_clients_customers_login_form_footer']);");
+        echo $this->show_block_area('Login_Clients_Form_FOOTER', "hooks()->add_action('clients_login_form_end', [\$this, 'your_function_clients_customers_login_form_footer']);");
     }
 
     //Login admin & staff
     public function scripts_styles_admin_staff_head()
     {
-        echo $this->show_block_area('Logged_Amin_HEAD',"hooks()->add_action('app_admin_head', [\$this, 'your_function_scripts_styles_admin_staff_head']);");
+        // Scripts & Styles
+        echo '<link rel="stylesheet" href="' . poly_blank_module_common_helper::get_assets('css/admin/style.css') . '"/>';
+        echo '<script src="' . poly_blank_module_common_helper::get_assets('js/public/common.js') . '"></script>';
+
+        echo $this->show_block_area('Logged_Amin_HEAD', "hooks()->add_action('app_admin_head', [\$this, 'your_function_scripts_styles_admin_staff_head']);");
     }
     public function scripts_styles_admin_staff_footer()
     {
-        echo $this->show_block_area('Logged_Admin_FOOTER',"hooks()->add_action('app_admin_head', [\$this, 'your_function_scripts_styles_admin_staff_head']);");
+        echo '<script src="' . poly_blank_module_common_helper::get_assets('js/admin/scripts.js') . '"></script>';
+        echo $this->show_block_area('Logged_Admin_FOOTER', "hooks()->add_action('app_admin_head', [\$this, 'your_function_scripts_styles_admin_staff_head']);");
     }
 
     //Login clients/ customers
     public function scripts_styles_clients_customers_head()
     {
-        echo $this->show_block_area('LoginLogged_Clients_Customer_HEAD',"hooks()->add_action('app_customers_head', [\$this, 'your_function_scripts_styles_clients_customers_head']);");
+        echo $this->show_block_area('LoginLogged_Clients_Customer_HEAD', "hooks()->add_action('app_customers_head', [\$this, 'your_function_scripts_styles_clients_customers_head']);");
     }
     public function scripts_styles_clients_customers_footer()
     {
-        echo $this->show_block_area('LoginLogged_Clients_Customer_FOOTER',"hooks()->add_action('app_customers_footer', [\$this, 'your_function_scripts_styles_clients_customers_footer']);");
+        echo $this->show_block_area('LoginLogged_Clients_Customer_FOOTER', "hooks()->add_action('app_customers_footer', [\$this, 'your_function_scripts_styles_clients_customers_footer']);");
     }
 
     public function show_block_area($content, $hook_function = '')
     {
-        return '<div class="poly-hook-area" style="padding: 4px; color: yellow; display: flex; justify-content: center;"><div style="background:red; padding: 4px 8px; text-align: center">' . $content . ' by '.POLY_BLANK_MODULE. ((!empty($hook_function) ? "<pre>{$hook_function}</pre>" :'')).'</div></div>';
+        return '<div class="poly-hook-area" style="padding: 4px; color: yellow; display: flex; justify-content: center;"><div style="background:red; padding: 4px 8px; text-align: center">' . $content . ' by ' . POLY_BLANK_MODULE . ((!empty($hook_function) ? "<pre>{$hook_function}</pre>" : '')) . '</div></div>';
     }
 
     public function register_activation_hook()
     {
         require_once(__DIR__ . '/install.php');
 
-       // Register your module's custom routes into application/config/routes.php via my_routes.php (the file will be created automatically if it doesn't exist. Therefore, ensure write permissions for the application/config directory). Remove or comment out this code if the module does not register routes.
+        // Register your module's custom routes into application/config/routes.php via my_routes.php (the file will be created automatically if it doesn't exist. Therefore, ensure write permissions for the application/config directory). Remove or comment out this code if the module does not register routes.
         poly_blank_module_common_helper::require_in_file(APPPATH . 'config/my_routes.php', "FCPATH.'modules/" . POLY_BLANK_MODULE . "/config/my_routes.php'");
     }
-    
+
     public function register_deactivation_hook()
     {
         // Unregister your module's custom routes from application/config/routes.php via my_routes.php (the file will be created automatically if it doesn't exist. Therefore, ensure write permissions for the application/config directory). Remove or comment out this code if the module does not register routes.
@@ -139,16 +145,23 @@ class POLYBLANKMODULE
             ]);
             $CI->app_menu->add_sidebar_children_item(POLY_BLANK_MODULE, [
                 'slug'     => 'item_test',
-                'name'     => _l(POLY_BLANK_MODULE.'_item_test'),
-                'href'     => admin_url(POLY_BLANK_MODULE.'/item_test'),
+                'name'     => _l(POLY_BLANK_MODULE . '_item_test'),
+                'href'     => admin_url(POLY_BLANK_MODULE . '/item_test'),
                 'position' => 5,
             ]);
 
             $CI->app_menu->add_sidebar_children_item(POLY_BLANK_MODULE, [
                 'slug'     => 'settings',
-                'name'     => _l(POLY_BLANK_MODULE.'_settings'),
-                'href'     => admin_url(POLY_BLANK_MODULE.'/settings'),
+                'name'     => _l(POLY_BLANK_MODULE . '_settings'),
+                'href'     => admin_url(POLY_BLANK_MODULE . '/settings'),
                 'position' => 10,
+            ]);
+
+            $CI->app_menu->add_sidebar_children_item(POLY_BLANK_MODULE, [
+                'slug'     => POLY_BLANK_MODULE_SETTINGS_TAB,
+                'name'     => _l(POLY_BLANK_MODULE . '_settings_tab'),
+                'href'     => admin_url(POLY_BLANK_MODULE . '/' . POLY_BLANK_MODULE_SETTINGS_TAB),
+                'position' => 15,
             ]);
 
             $this->permissions();
@@ -174,7 +187,7 @@ class POLYBLANKMODULE
             'edit'   => _l('permission_edit'),
             'delete' => _l('permission_delete'),
         ];
-        register_staff_capabilities(POLY_BLANK_MODULE.'_item_test', $capabilities, _l(POLY_BLANK_MODULE.'_item_test') . ' (' . _l(POLY_BLANK_MODULE) . ')');
+        register_staff_capabilities(POLY_BLANK_MODULE . '_item_test', $capabilities, _l(POLY_BLANK_MODULE . '_item_test') . ' (' . _l(POLY_BLANK_MODULE) . ')');
 
         $capabilities = [];
         $capabilities['capabilities'] = [
@@ -183,7 +196,7 @@ class POLYBLANKMODULE
             'edit'   => _l('permission_edit'),
             'delete' => _l('permission_delete'),
         ];
-        register_staff_capabilities(POLY_BLANK_MODULE.'_settings', $capabilities, _l(POLY_BLANK_MODULE.'_settings') . ' (' . _l(POLY_BLANK_MODULE) . ')');
+        register_staff_capabilities(POLY_BLANK_MODULE . '_settings', $capabilities, _l(POLY_BLANK_MODULE . '_settings') . ' (' . _l(POLY_BLANK_MODULE) . ')');
     }
 }
 new POLYBLANKMODULE();

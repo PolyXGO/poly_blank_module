@@ -9,7 +9,7 @@ class poly_blank_module_common_helper
         $CI = &get_instance();
         return $CI->app_css->core_version();
     }
-
+    
     public static function get_assets($path, $is_version = true, $is_date = false){
         $url = base_url("modules/".POLY_BLANK_MODULE."/assets/{$path}");
         if($is_version){
@@ -21,18 +21,46 @@ class poly_blank_module_common_helper
         return $url;
     }
 
-    public static function removeUrlParam($url, $paramToRemove) {
+    public static function get_assets_minified($path, $is_version = true, $is_date = false)
+    {
+        $url = base_url($path);
+        if ($is_version) {
+            $url = self::addOrUpdateUrlParam($url, array('c' => self::core_version(), 'v' => POLY_UTILITIES_VERSION));
+        }
+        if ($is_date) {
+            $url = self::addOrUpdateUrlParam($url, array('d' => time()));
+        }
+        return self::convertToMinifiedUrl($url);
+    }
+
+    public static function convertToMinifiedUrl($url)
+    {
+        $parts = parse_url($url);
+        $query = isset($parts['query']) ? '?' . $parts['query'] : '';
+
+        $check_localhost = poly_utilities_common_helper::is_localhost();
+        if (!$check_localhost) {
+            if (substr($parts['path'], -4) === '.css') {
+                $parts['path'] = substr($parts['path'], 0, -4) . '.min.css';
+            } elseif (substr($parts['path'], -3) === '.js') {
+                $parts['path'] = substr($parts['path'], 0, -3) . '.min.js';
+            }
+        }
+        return $parts['path'] . $query;
+    }
+    public static function removeUrlParam($url, $paramToRemove)
+    {
         $parsedUrl = parse_url($url);
         $query = array();
-        
+
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $query);
         }
-    
+
         unset($query[$paramToRemove]);
-    
+
         $newQueryString = http_build_query($query);
-    
+
         $finalUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
         if (isset($parsedUrl['path'])) {
             $finalUrl .= $parsedUrl['path'];
@@ -40,22 +68,24 @@ class poly_blank_module_common_helper
         if ($newQueryString) {
             $finalUrl .= '?' . $newQueryString;
         }
-    
+
         return $finalUrl;
     }
 
-    public static function addOrUpdateUrlParam($url, $newParams) {
+
+    public static function addOrUpdateUrlParam($url, $newParams)
+    {
         $parsedUrl = parse_url($url);
         $query = array();
-        
+
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $query);
         }
-    
+
         $query = array_merge($query, $newParams);
-    
+
         $newQueryString = http_build_query($query);
-    
+
         $finalUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
         if (isset($parsedUrl['path'])) {
             $finalUrl .= $parsedUrl['path'];
@@ -63,7 +93,7 @@ class poly_blank_module_common_helper
         if ($newQueryString) {
             $finalUrl .= '?' . $newQueryString;
         }
-    
+
         return $finalUrl;
     }
 
@@ -153,4 +183,18 @@ class poly_blank_module_common_helper
         @chmod($path, FILE_READ_MODE);
         return true;
     }
+
+    public static function createTab($slug, $name, $view, $position, $icon)
+        {
+            return [
+                "slug" => $slug,
+                "name" => $name,
+                "view" => $view,
+                "position" => $position,
+                "icon" => $icon,
+                "href" => "#",
+                "badge" => [],
+                "children" => []
+            ];
+        }
 }
